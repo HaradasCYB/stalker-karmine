@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 
@@ -11,6 +12,34 @@ const LINKS = [
   { href: "/classements", label: "Classements" },
 ];
 
+function KCLogo({ size = 32 }: { size?: number }) {
+  return (
+    <div
+      className="flex items-center justify-center rounded-lg border border-kc-blue/40 bg-kc-blue/10 overflow-hidden flex-shrink-0"
+      style={{ width: size, height: size }}
+    >
+      <Image
+        src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png"
+        alt="Karmine Corp"
+        width={size}
+        height={size}
+        className="object-contain p-0.5"
+        onError={(e) => {
+          // Fallback texte si image indispo
+          (e.target as HTMLImageElement).style.display = "none";
+        }}
+        unoptimized
+      />
+      {/* Fallback KC text toujours présent derrière */}
+      <span
+        className="font-display font-black text-kc-blue absolute"
+        style={{ fontSize: size * 0.35 }}
+      >
+      </span>
+    </div>
+  );
+}
+
 export function NavBar() {
   const pathname = usePathname();
 
@@ -18,12 +47,16 @@ export function NavBar() {
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-kc-border">
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 relative">
-            <div className="absolute inset-0 bg-kc-blue rounded-sm opacity-20 group-hover:opacity-40 transition-opacity" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="font-display font-black text-kc-blue text-sm leading-none">KC</span>
-            </div>
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative w-9 h-9 flex items-center justify-center rounded-lg border border-kc-blue/40 bg-kc-blue/10 overflow-hidden group-hover:border-kc-blue/70 transition-all">
+            <Image
+              src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png"
+              alt="KC"
+              width={36}
+              height={36}
+              className="object-contain p-0.5"
+              unoptimized
+            />
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-display font-bold text-white text-sm tracking-wider">STALKER</span>
@@ -41,36 +74,24 @@ export function NavBar() {
                 href={link.href}
                 className={clsx(
                   "relative px-4 py-2 text-sm font-display font-medium tracking-wide rounded-lg transition-all duration-200",
-                  isActive
-                    ? "text-kc-blue bg-kc-blue/10"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                  isActive ? "text-kc-blue bg-kc-blue/10" : "text-gray-400 hover:text-white hover:bg-white/5"
                 )}
                 style={isActive && link.color ? { color: link.color, background: `${link.color}15` } : {}}
               >
                 {link.label}
                 {isActive && (
-                  <span
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
-                    style={{ background: link.color ?? "#00BFFF" }}
-                  />
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full" style={{ background: link.color ?? "#00BFFF" }} />
                 )}
               </Link>
             );
           })}
         </div>
 
-        {/* Mobile: simplified */}
-        <div className="flex md:hidden items-center gap-2">
+        {/* Mobile */}
+        <div className="flex md:hidden items-center gap-1">
           {LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={clsx(
-                "text-xs font-display font-medium px-2 py-1 rounded",
-                pathname === link.href ? "text-kc-blue" : "text-gray-500"
-              )}
-            >
-              {link.label === "Rocket League" ? "RL" : link.label === "Valorant" ? "VAL" : link.label === "League of Legends" ? "LoL" : link.label === "Classements" ? "CLT" : link.label}
+            <Link key={link.href} href={link.href} className={clsx("text-xs font-display font-medium px-2 py-1 rounded", pathname === link.href ? "text-kc-blue" : "text-gray-500")}>
+              {link.label === "Rocket League" ? "RL" : link.label === "Valorant" ? "VAL" : link.label === "Classements" ? "CLT" : link.label}
             </Link>
           ))}
         </div>
