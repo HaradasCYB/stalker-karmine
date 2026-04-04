@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { getAllKCMatches, getKCMatches, isKCWinner, getKCScore, getOpponentScore, getKCOpponent, formatDate, GAME_LABELS, GAME_COLORS } from "@/lib/pandascore";
+import { getAllKCMatches, formatDate, GAME_LABELS, GAME_COLORS } from "@/lib/pandascore";
 import type { Game, Match } from "@/lib/pandascore";
 import { MatchCard } from "@/components/MatchCard";
+import { TwitchStream } from "@/components/TwitchStream";
 
 export const revalidate = 60;
 
@@ -10,7 +11,7 @@ const GAME_PATHS: Record<Game, string> = { lol: "/lol", rl: "/rl", valorant: "/v
 
 function WinRate({ matches, game }: { matches: Match[]; game: Game }) {
   const finished = matches.filter((m) => m.status === "finished");
-  const wins = finished.filter((m) => isKCWinner(m, game) === true).length;
+  const wins = finished.filter((m) => m.winner_id === m._kcId).length;
   const rate = finished.length > 0 ? Math.round((wins / finished.length) * 100) : 0;
   return (
     <div className="text-center">
@@ -110,7 +111,7 @@ export default async function HomePage() {
           {GAMES.map((game) => {
             const matches = gameMatches[game];
             const finished = matches.filter((m) => m.status === "finished");
-            const wins = finished.filter((m) => isKCWinner(m, game) === true).length;
+            const wins = finished.filter((m) => m.winner_id === m._kcId).length;
             return (
               <div
                 key={game}
@@ -158,6 +159,9 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Stream Kameto */}
+      <TwitchStream />
 
       {/* Derniers résultats */}
       {recentMatches.length > 0 && (
