@@ -130,23 +130,44 @@ export interface PlayerStats {
 
 export async function getKCMatches(game: Game): Promise<Match[]> {
   const teamId = KC_TEAMS[game];
-  const [past, running, upcoming] = await Promise.all([
-    fetchPS<Match[]>(`/${GAME_SLUG[game]}/matches/past`, {
+
+  // Fenêtre large : 6 mois en arrière → 2 mois en avant
+  const now = new Date();
+  const sixMonthsAgo = new Date(now);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  const twoMonthsAhead = new Date(now);
+  twoMonthsAhead.setMonth(twoMonthsAhead.getMonth() + 2);
+
+  const rangeStart = sixMonthsAgo.toISOString().split("T")[0]; // YYYY-MM-DD
+  const rangeEnd = twoMonthsAhead.toISOString().split("T")[0];
+
+  // Endpoint générique /matches avec filtre équipe + plage de dates
+  const all = await fetchPS<Match[]>(`/${GAME_SLUG[game]}/matches`, {
+    "filter[opponent_id]": teamId,
+    "range[scheduled_at]": `${rangeStart},${rangeEnd}`,
+    sort: "-scheduled_at",
+    per_page: 50,
+  });
+
+  // Si rien avec scheduled_at, on tente sans filtre de date (fallback)
+  if (!all || all.length === 0) {
+    const fallback = await fetchPS<Match[]>(`/${GAME_SLUG[game]}/matches`, {
       "filter[opponent_id]": teamId,
-      per_page: 20,
       sort: "-begin_at",
-    }),
-    fetchPS<Match[]>(`/${GAME_SLUG[game]}/matches/running`, {
-      "filter[opponent_id]": teamId,
-      per_page: 5,
-    }),
-    fetchPS<Match[]>(`/${GAME_SLUG[game]}/matches/upcoming`, {
-      "filter[opponent_id]": teamId,
-      per_page: 10,
-      sort: "begin_at",
-    }),
-  ]);
-  return [...(running ?? []), ...(upcoming ?? []), ...(past ?? [])];
+      per_page: 30,
+    });
+    const results = fallback ?? [];
+    // Tri : live > upcoming > finished
+    return results.sort((a, b) => {
+      const order = { running: 0, not_started: 1, finished: 2, canceled: 3 };
+      return (order[a.status] ?? 3) - (order[b.status] ?? 3);
+    });
+  }
+
+  return all.sort((a, b) => {
+    const order = { running: 0, not_started: 1, finished: 2, canceled: 3 };
+    return (order[a.status] ?? 3) - (order[b.status] ?? 3);
+  });
 }
 
 export async function getAllKCMatches(): Promise<Match[]> {
@@ -155,11 +176,22 @@ export async function getAllKCMatches(): Promise<Match[]> {
     getKCMatches("rl"),
     getKCMatches("valorant"),
   ]);
-  return [...lol, ...rl, ...val].sort((a, b) => {
-    const da = new Date(a.scheduled_at ?? a.begin_at ?? 0).getTime();
-    const db = new Date(b.scheduled_at ?? b.begin_at ?? 0).getTime();
-    return db - da;
-  });
+
+  // Tag chaque match avec son jeu pour faciliter le rendu côté page
+  const tag = (matches: Match[], game: Game) =>
+    matches.map((m) => ({ ...m, _game: game }));
+
+  return [...tag(lol, "lol"), ...tag(rl, "rl"), ...tag(val, "valorant")].sort(
+    (a, b) => {
+      // Live en premier, puis upcoming, puis finished par date décroissante
+      const order = { running: 0, not_started: 1, finished: 2, canceled: 3 };
+      const statusDiff = (order[a.status] ?? 3) - (order[b.status] ?? 3);
+      if (statusDiff !== 0) return statusDiff;
+      const da = new Date(a.scheduled_at ?? a.begin_at ?? 0).getTime();
+      const db = new Date(b.scheduled_at ?? b.begin_at ?? 0).getTime();
+      return db - da;
+    }
+  );
 }
 
 export async function getMatchById(game: Game, id: number): Promise<Match | null> {
