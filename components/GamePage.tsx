@@ -1,4 +1,4 @@
-import { getKCMatches, getKCRoster, isKCWinner, GAME_COLORS, GAME_LABELS, formatDate, getKCOpponent } from "@/lib/pandascore";
+import { getKCMatches, getKCRoster, GAME_COLORS, GAME_LABELS, formatDate } from "@/lib/pandascore";
 import type { Game, Match } from "@/lib/pandascore";
 import { MatchCard } from "@/components/MatchCard";
 import { clsx } from "clsx";
@@ -62,7 +62,7 @@ export async function GamePage({ game }: Props) {
   const liveMatches = matches.filter((m) => m.status === "running");
   const upcoming = matches.filter((m) => m.status === "not_started");
   const finished = matches.filter((m) => m.status === "finished");
-  const wins = finished.filter((m) => isKCWinner(m, game) === true).length;
+  const wins = finished.filter((m) => m.winner_id === m._kcId).length;
   const losses = finished.length - wins;
 
   const color = GAME_COLORS[game];
@@ -133,7 +133,7 @@ export async function GamePage({ game }: Props) {
           <h2 className="font-display font-bold text-lg mb-6">Résultats par compétition</h2>
           <div className="space-y-8">
             {Object.entries(byTournament).map(([tournament, tMatches]) => {
-              const tWins = tMatches.filter((m) => isKCWinner(m, game) === true).length;
+              const tWins = tMatches.filter((m) => m.winner_id === m._kcId).length;
               const tLosses = tMatches.length - tWins;
               return (
                 <div key={tournament}>
