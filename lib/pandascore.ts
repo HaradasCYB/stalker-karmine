@@ -5,7 +5,7 @@ const TOKEN = process.env.PANDASCORE_TOKEN ?? "";
 export type Game = "lol" | "rl" | "valorant";
 
 const GAME_SLUG: Record<Game, string> = {
-  lol: "league-of-legends",
+  lol: "lol",
   rl: "rl",
   valorant: "valorant",
 };
