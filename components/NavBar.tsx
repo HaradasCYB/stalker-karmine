@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 
@@ -49,13 +48,11 @@ export function NavBar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative w-9 h-9 flex items-center justify-center rounded-lg border border-kc-blue/40 bg-kc-blue/10 overflow-hidden group-hover:border-kc-blue/70 transition-all">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png"
               alt="KC"
-              width={36}
-              height={36}
-              className="object-contain p-0.5"
-              unoptimized
+              style={{ width: 28, height: 28, objectFit: "contain" }}
             />
           </div>
           <div className="flex flex-col leading-none">
