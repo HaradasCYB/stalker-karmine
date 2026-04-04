@@ -98,7 +98,7 @@ export default async function MatchDetailPage({ params }: Props) {
           {/* KC */}
           <div className="flex flex-col items-center gap-3">
             <div className="w-16 h-16 bg-kc-blue/10 rounded-2xl flex items-center justify-center border border-kc-blue/30 overflow-hidden">
-              <img src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png" alt="Karmine Corp" className="w-full h-full object-contain p-1.5" />
+              <img src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png" alt="Karmine Corp" style={{ width: 50, height: 50, objectFit: "contain" }} />
             </div>
             <span className="font-display font-bold text-white text-center text-sm">Karmine Corp</span>
             {isFinished && won === true && (
@@ -228,7 +228,7 @@ export default async function MatchDetailPage({ params }: Props) {
               { label: "Compétition", value: match.tournament?.name ?? "—" },
               { label: "Ligue", value: match.league?.name ?? "—" },
               { label: "Saison", value: match.serie?.full_name ?? "—" },
-              { label: "Type de match", value: `BO${match.number_of_games}` },
+              { label: "Type de match", value: match.number_of_games ? `BO${match.number_of_games}` : "—" },
               { label: "Format", value: match.match_type ?? "—" },
               { label: "Date", value: formatDate(match.scheduled_at ?? match.begin_at) },
               { label: "Jeu", value: match.videogame?.name ?? GAME_LABELS[game] },
