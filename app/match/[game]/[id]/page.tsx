@@ -3,14 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   getMatchById,
-  getKCOpponent,
-  getKCScore,
-  getOpponentScore,
-  isKCWinner,
   formatDate,
   GAME_COLORS,
   GAME_LABELS,
-  KC_TEAMS,
 } from "@/lib/pandascore";
 import type { Game } from "@/lib/pandascore";
 import { clsx } from "clsx";
@@ -38,11 +33,11 @@ export default async function MatchDetailPage({ params }: Props) {
   if (!match) notFound();
 
   const color = GAME_COLORS[game];
-  const kcId = KC_TEAMS[game];
-  const opponent = getKCOpponent(match, game);
-  const kcScore = getKCScore(match, game);
-  const oppScore = getOpponentScore(match, game);
-  const won = isKCWinner(match, game);
+  const kcId = (match as any)._kcId ?? 0;
+  const opponent = match.opponents?.find(o => o.opponent.id !== kcId)?.opponent ?? null;
+  const kcScore = match.results?.find(r => r.team_id === kcId)?.score ?? 0;
+  const oppScore = match.results?.find(r => r.team_id !== kcId)?.score ?? 0;
+  const won = match.status === "finished" ? match.winner_id === kcId : null;
   const isLive = match.status === "running";
   const isFinished = match.status === "finished";
 
