@@ -11,33 +11,7 @@ const LINKS = [
   { href: "/classements", label: "Classements" },
 ];
 
-function KCLogo({ size = 32 }: { size?: number }) {
-  return (
-    <div
-      className="flex items-center justify-center rounded-lg border border-kc-blue/40 bg-kc-blue/10 overflow-hidden flex-shrink-0"
-      style={{ width: size, height: size }}
-    >
-      <Image
-        src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png"
-        alt="Karmine Corp"
-        width={size}
-        height={size}
-        className="object-contain p-0.5"
-        onError={(e) => {
-          // Fallback texte si image indispo
-          (e.target as HTMLImageElement).style.display = "none";
-        }}
-        unoptimized
-      />
-      {/* Fallback KC text toujours présent derrière */}
-      <span
-        className="font-display font-black text-kc-blue absolute"
-        style={{ fontSize: size * 0.35 }}
-      >
-      </span>
-    </div>
-  );
-}
+
 
 export function NavBar() {
   const pathname = usePathname();
