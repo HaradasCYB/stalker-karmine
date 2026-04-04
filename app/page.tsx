@@ -31,9 +31,9 @@ export default async function HomePage() {
   const recentMatches = allMatches.filter((m) => m.status === "finished").slice(0, 5);
 
   const gameMatches = {
-    lol: allMatches.filter((m) => m.videogame?.slug === "league-of-legends"),
-    rl: allMatches.filter((m) => m.videogame?.slug === "rocket-league"),
-    valorant: allMatches.filter((m) => m.videogame?.slug === "valorant"),
+    lol: allMatches.filter((m) => (m as any)._game === "lol"),
+    rl: allMatches.filter((m) => (m as any)._game === "rl"),
+    valorant: allMatches.filter((m) => (m as any)._game === "valorant"),
   } as Record<Game, Match[]>;
 
   return (
@@ -96,7 +96,7 @@ export default async function HomePage() {
           </h2>
           <div className="grid sm:grid-cols-2 gap-4 stagger">
             {liveMatches.map((m) => {
-              const game = m.videogame?.slug?.includes("valorant") ? "valorant" : m.videogame?.slug?.includes("rocket") ? "rl" : "lol";
+              const game: Game = (m as any)._game ?? "lol";
               return <MatchCard key={m.id} match={m} game={game} showGame />;
             })}
           </div>
@@ -152,7 +152,7 @@ export default async function HomePage() {
           <h2 className="font-display font-bold text-xl mb-4">Prochains matchs</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
             {upcomingMatches.map((m) => {
-              const game: Game = m.videogame?.slug?.includes("valorant") ? "valorant" : m.videogame?.slug?.includes("rocket") ? "rl" : "lol";
+              const game: Game = (m as any)._game ?? "lol";
               return <MatchCard key={m.id} match={m} game={game} showGame />;
             })}
           </div>
@@ -165,7 +165,7 @@ export default async function HomePage() {
           <h2 className="font-display font-bold text-xl mb-4">Derniers résultats</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
             {recentMatches.map((m) => {
-              const game: Game = m.videogame?.slug?.includes("valorant") ? "valorant" : m.videogame?.slug?.includes("rocket") ? "rl" : "lol";
+              const game: Game = (m as any)._game ?? "lol";
               return <MatchCard key={m.id} match={m} game={game} showGame />;
             })}
           </div>
@@ -173,12 +173,14 @@ export default async function HomePage() {
       )}
 
       {allMatches.length === 0 && (
-        <div className="text-center py-20">
+        <div className="text-center py-20 space-y-3">
           <p className="font-mono text-kc-muted text-sm">
-            Aucune donnée disponible — vérifie la clé API PandaScore dans les variables d'environnement Vercel.
+            Aucun match trouvé sur les 6 derniers mois.
           </p>
-          <p className="font-mono text-kc-muted text-xs mt-2">
-            Variable requise : <span className="text-kc-blue">PANDASCORE_TOKEN</span>
+          <p className="font-mono text-kc-muted text-xs">
+            {process.env.PANDASCORE_TOKEN
+              ? "KC n'a pas de matchs référencés sur PandaScore pour cette période."
+              : <>Clé API manquante — configure <span className="text-kc-blue">PANDASCORE_TOKEN</span> dans Vercel.</>}
           </p>
         </div>
       )}
