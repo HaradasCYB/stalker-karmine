@@ -21,16 +21,14 @@ function TeamLogo({ imageUrl, name, acronym, isKC = false, size = 40 }: {
   return (
     <div
       className="rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0"
-      style={{ width: size, height: size, border: `1.5px solid ${borderColor}`, background: bg }}
+      style={{ width: size, height: size, border: `1.5px solid ${borderColor}`, background: bg, minWidth: size }}
     >
       {src ? (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={src}
           alt={name}
-          width={size}
-          height={size}
-          className="object-contain p-1"
-          unoptimized
+          style={{ width: size - 8, height: size - 8, objectFit: "contain" }}
         />
       ) : (
         <span className="font-display font-black text-gray-400" style={{ fontSize: size * 0.28 }}>
