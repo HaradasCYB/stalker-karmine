@@ -33,11 +33,17 @@ export default async function MatchDetailPage({ params }: Props) {
   if (!match) notFound();
 
   const color = GAME_COLORS[game];
-  const kcId = (match as any)._kcId ?? 0;
+  
+  // Déterminer KC parmi les opponents par son nom (fallback si _kcId absent)
+  const kcTeam = match.opponents?.find(o =>
+    o.opponent.name?.toLowerCase().includes("karmine")
+  )?.opponent ?? null;
+  const kcId = kcTeam?.id ?? 0;
+
   const opponent = match.opponents?.find(o => o.opponent.id !== kcId)?.opponent ?? null;
   const kcScore = match.results?.find(r => r.team_id === kcId)?.score ?? 0;
   const oppScore = match.results?.find(r => r.team_id !== kcId)?.score ?? 0;
-  const won = match.status === "finished" ? match.winner_id === kcId : null;
+  const won = match.status === "finished" && kcId ? match.winner_id === kcId : null;
   const isLive = match.status === "running";
   const isFinished = match.status === "finished";
 
@@ -83,7 +89,7 @@ export default async function MatchDetailPage({ params }: Props) {
             >
               {GAME_LABELS[game]}
             </span>
-            <span className="text-[10px] font-mono text-kc-muted">BO{match.number_of_games}</span>
+            <span className="text-[10px] font-mono text-kc-muted">{match.number_of_games ? `BO${match.number_of_games}` : "—"}</span>
           </div>
         </div>
 
@@ -91,8 +97,8 @@ export default async function MatchDetailPage({ params }: Props) {
         <div className="px-6 py-8 grid grid-cols-3 items-center gap-4">
           {/* KC */}
           <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 bg-kc-blue/10 rounded-2xl flex items-center justify-center border border-kc-blue/30">
-              <span className="font-display font-black text-kc-blue text-xl">KC</span>
+            <div className="w-16 h-16 bg-kc-blue/10 rounded-2xl flex items-center justify-center border border-kc-blue/30 overflow-hidden">
+              <img src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png" alt="Karmine Corp" className="w-full h-full object-contain p-1.5" />
             </div>
             <span className="font-display font-bold text-white text-center text-sm">Karmine Corp</span>
             {isFinished && won === true && (
@@ -132,7 +138,8 @@ export default async function MatchDetailPage({ params }: Props) {
           <div className="flex flex-col items-center gap-3">
             <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-kc-border overflow-hidden">
               {opponent?.image_url ? (
-                <Image src={opponent.image_url} alt={opponent.name ?? ""} width={56} height={56} className="object-contain p-1" />
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={opponent.image_url} alt={opponent.name ?? ""} className="w-full h-full object-contain p-1" />
               ) : (
                 <span className="font-display font-bold text-gray-500 text-lg">{opponent?.acronym ?? "?"}</span>
               )}
