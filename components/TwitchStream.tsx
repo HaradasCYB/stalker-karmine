@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const CHANNEL = "kameto";
+const CHANNEL = "kamet0";
 const PARENT = "stalker-karmine.vercel.app";
 
 interface TwitchStreamInfo {
