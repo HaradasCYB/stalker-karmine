@@ -10,7 +10,7 @@ const GAME_SLUG_PATH: Record<Game, string> = { lol: "lol", rl: "rl", valorant: "
 
 // URL du logo KC officiel sur le CDN PandaScore
 // Logo KC - on utilise l'image de l'équipe KC depuis les données du match si disponible
-const KC_LOGO_FALLBACK = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Karmine_Corp_logo.svg/600px-Karmine_Corp_logo.svg.png";
+const KC_LOGO_FALLBACK = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjE4IiBmaWxsPSIjMDBCRkZGIi8+CiAgPHRleHQgeD0iNTAiIHk9IjY4IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssIEFyaWFsIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjQ0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9Ii0yIj5LQzwvdGV4dD4KPC9zdmc+";
 
 function TeamLogo({ imageUrl, name, acronym, isKC = false, size = 40 }: {
   imageUrl: string | null; name: string; acronym?: string; isKC?: boolean; size?: number;
