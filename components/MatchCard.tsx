@@ -9,14 +9,16 @@ const GAME_LABEL: Record<Game, string> = { lol: "LoL", rl: "RL", valorant: "VAL"
 const GAME_SLUG_PATH: Record<Game, string> = { lol: "lol", rl: "rl", valorant: "valorant" };
 
 // URL du logo KC officiel sur le CDN PandaScore
-const KC_LOGO = "https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png";
+// Logo KC - on utilise l'image de l'équipe KC depuis les données du match si disponible
+const KC_LOGO_FALLBACK = "https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png";
 
 function TeamLogo({ imageUrl, name, acronym, isKC = false, size = 40 }: {
   imageUrl: string | null; name: string; acronym?: string; isKC?: boolean; size?: number;
 }) {
   const borderColor = isKC ? "rgba(0,191,255,0.4)" : "rgba(28,32,48,0.8)";
   const bg = isKC ? "rgba(0,191,255,0.08)" : "rgba(255,255,255,0.03)";
-  const src = isKC ? KC_LOGO : imageUrl;
+  const kcImageUrl = isKC ? (imageUrl || KC_LOGO_FALLBACK) : imageUrl;
+  const src = kcImageUrl;
 
   return (
     <div
@@ -29,10 +31,12 @@ function TeamLogo({ imageUrl, name, acronym, isKC = false, size = 40 }: {
           src={src}
           alt={name}
           style={{ width: size - 8, height: size - 8, objectFit: "contain" }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
         />
-      ) : (
+      ) : null}
+      {!src && (
         <span className="font-display font-black text-gray-400" style={{ fontSize: size * 0.28 }}>
-          {acronym?.slice(0, 3) ?? name.slice(0, 2).toUpperCase()}
+          {isKC ? "KC" : (acronym?.slice(0, 3) ?? name.slice(0, 2).toUpperCase())}
         </span>
       )}
     </div>
