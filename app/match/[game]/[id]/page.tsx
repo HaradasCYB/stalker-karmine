@@ -225,12 +225,12 @@ export default async function MatchDetailPage({ params }: Props) {
         <div className="glass rounded-xl border border-kc-border overflow-hidden">
           <div className="divide-y divide-kc-border">
             {[
-              { label: "Compétition", value: match.tournament?.name ?? "—" },
+              { label: "Compétition", value: match.tournament?.name || match.serie?.name || "—" },
               { label: "Ligue", value: match.league?.name ?? "—" },
-              { label: "Saison", value: match.serie?.full_name ?? "—" },
+              { label: "Saison", value: match.serie?.full_name ?? match.serie?.name ?? "—" },
               { label: "Type de match", value: match.number_of_games ? `BO${match.number_of_games}` : "—" },
-              { label: "Format", value: match.match_type ?? "—" },
-              { label: "Date", value: formatDate(match.scheduled_at ?? match.begin_at) },
+              { label: "Format", value: match.match_type && match.match_type !== "custom" ? match.match_type : match.number_of_games ? `BO${match.number_of_games}` : "—" },
+              { label: "Date", value: formatDate(match.begin_at ?? match.scheduled_at) },
               { label: "Jeu", value: match.videogame?.name ?? GAME_LABELS[game] },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between px-5 py-3">
