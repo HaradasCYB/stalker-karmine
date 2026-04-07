@@ -5,13 +5,12 @@ import { clsx } from "clsx";
 
 const LINKS = [
   { href: "/", label: "Accueil" },
+  { href: "/live", label: "🔴 Live", color: "#00BFFF" },
   { href: "/lol", label: "LoL", color: "#C89B3C" },
   { href: "/rl", label: "Rocket League", color: "#2196F3" },
   { href: "/valorant", label: "Valorant", color: "#FF4655" },
   { href: "/classements", label: "Classements" },
 ];
-
-
 
 export function NavBar() {
   const pathname = usePathname();
@@ -20,13 +19,13 @@ export function NavBar() {
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-kc-border">
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-9 h-9 flex items-center justify-center rounded-lg border border-kc-blue/40 bg-kc-blue/10 overflow-hidden group-hover:border-kc-blue/70 transition-all">
+        <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
+          <div className="w-9 h-9 flex items-center justify-center rounded-lg border border-kc-blue/40 bg-kc-blue/10 overflow-hidden group-hover:border-kc-blue/70 transition-all flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png"
               alt="KC"
-              style={{ width: 28, height: 28, objectFit: "contain" }}
+              style={{ width: 26, height: 26, objectFit: "contain" }}
             />
           </div>
           <div className="flex flex-col leading-none">
@@ -35,8 +34,8 @@ export function NavBar() {
           </div>
         </Link>
 
-        {/* Nav Links */}
-        <div className="hidden md:flex items-center gap-1">
+        {/* Nav Links — desktop */}
+        <div className="hidden lg:flex items-center gap-0.5">
           {LINKS.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -44,7 +43,7 @@ export function NavBar() {
                 key={link.href}
                 href={link.href}
                 className={clsx(
-                  "relative px-4 py-2 text-sm font-display font-medium tracking-wide rounded-lg transition-all duration-200",
+                  "relative px-3 py-2 text-sm font-display font-medium tracking-wide rounded-lg transition-all duration-200 whitespace-nowrap",
                   isActive ? "text-kc-blue bg-kc-blue/10" : "text-gray-400 hover:text-white hover:bg-white/5"
                 )}
                 style={isActive && link.color ? { color: link.color, background: `${link.color}15` } : {}}
@@ -58,19 +57,19 @@ export function NavBar() {
           })}
         </div>
 
-        {/* Mobile */}
-        <div className="flex md:hidden items-center gap-1">
+        {/* Mobile nav */}
+        <div className="flex lg:hidden items-center gap-0.5 overflow-x-auto">
           {LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className={clsx("text-xs font-display font-medium px-2 py-1 rounded", pathname === link.href ? "text-kc-blue" : "text-gray-500")}>
-              {link.label === "Rocket League" ? "RL" : link.label === "Valorant" ? "VAL" : link.label === "Classements" ? "CLT" : link.label}
+            <Link key={link.href} href={link.href} className={clsx("text-xs font-display font-medium px-1.5 py-1 rounded whitespace-nowrap", pathname === link.href ? "text-kc-blue" : "text-gray-500")}>
+              {link.label === "Rocket League" ? "RL" : link.label === "Valorant" ? "VAL" : link.label === "Classements" ? "CLT" : link.label === "Accueil" ? "🏠" : link.label}
             </Link>
           ))}
         </div>
 
         {/* Live indicator */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <div className="live-dot" />
-          <span className="text-xs font-mono text-kc-muted hidden sm:block">LIVE TRACKING</span>
+          <span className="text-xs font-mono text-kc-muted hidden xl:block">LIVE TRACKING</span>
         </div>
       </nav>
     </header>
