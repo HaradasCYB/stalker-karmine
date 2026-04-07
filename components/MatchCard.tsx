@@ -31,7 +31,6 @@ function TeamLogo({ imageUrl, name, acronym, isKC = false, size = 40 }: {
           src={src}
           alt={name}
           style={{ width: size - 8, height: size - 8, objectFit: "contain" }}
-          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
         />
       ) : null}
       {!src && (
