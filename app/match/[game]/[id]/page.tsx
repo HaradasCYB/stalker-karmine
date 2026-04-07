@@ -16,7 +16,7 @@ const GAME_SLUG_MAP: Record<string, Game> = {
   lol: "lol", rl: "rl", valorant: "valorant",
 };
 
-const KC_LOGO = "https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png";
+const KC_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Karmine_Corp_logo.svg/600px-Karmine_Corp_logo.svg.png";
 
 interface Props { params: { game: string; id: string }; }
 
