@@ -23,7 +23,7 @@ export function NavBar() {
           <div className="w-9 h-9 flex items-center justify-center rounded-lg border border-kc-blue/40 bg-kc-blue/10 overflow-hidden group-hover:border-kc-blue/70 transition-all flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Karmine_Corp_logo.svg/600px-Karmine_Corp_logo.svg.png"
               alt="KC"
               style={{ width: 26, height: 26, objectFit: "contain" }}
             />
