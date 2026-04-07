@@ -6,7 +6,7 @@ import { MatchCard } from "@/components/MatchCard";
 export const revalidate = 30;
 
 const GAME_SLUG_PATH: Record<Game, string> = { lol: "lol", rl: "rl", valorant: "valorant" };
-const KC_LOGO = "https://cdn.pandascore.co/images/team/image/126068/600px-Karmine_Corp_logo.png";
+const KC_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Karmine_Corp_logo.svg/600px-Karmine_Corp_logo.svg.png";
 
 function LiveScoreCard({ match }: { match: Match }) {
   const game = (match._game ?? "lol") as Game;
