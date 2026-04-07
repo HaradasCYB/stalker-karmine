@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getKCTournaments, getTournamentStandings, KC_TEAMS, GAME_LABELS, GAME_COLORS } from "@/lib/pandascore";
+import { getKCTournaments, getTournamentStandings, GAME_LABELS, GAME_COLORS } from "@/lib/pandascore";
 import type { Game, Standing, Tournament } from "@/lib/pandascore";
 import { clsx } from "clsx";
 
@@ -81,7 +81,7 @@ async function GameClassements({ game }: { game: Game }) {
   // Get standings for the 3 most recent tournaments
   const recent = tournaments.slice(0, 3);
   const standingsResults = await Promise.allSettled(
-    recent.map((t) => getTournamentStandings(game, t.id))
+    recent.map((t) => getTournamentStandings(t.id))
   );
 
   return (
