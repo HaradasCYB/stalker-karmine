@@ -25,7 +25,7 @@ function StandingTable({ standings, kcId, color }: { standings: Standing[]; kcId
         </thead>
         <tbody>
           {standings.map((s) => {
-            const isKC = s.team.id === kcId;
+            const isKC = s.team.name?.toLowerCase().includes("karmine") && !s.team.name?.toLowerCase().includes("blue");
             return (
               <tr
                 key={s.team.id}
@@ -75,7 +75,8 @@ function StandingTable({ standings, kcId, color }: { standings: Standing[]; kcId
 
 async function GameClassements({ game }: { game: Game }) {
   const color = GAME_COLORS[game];
-  const kcId = KC_TEAMS[game];
+  // KC est identifié par son nom dans les standings
+  const kcId = 0; // sera déterminé dynamiquement par le nom dans StandingTable
   const tournaments = await getKCTournaments(game).catch(() => [] as Tournament[]);
 
   // Get standings for the 3 most recent tournaments
