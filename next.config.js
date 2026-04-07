@@ -6,6 +6,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'app.pandascore.co' },
       { protocol: 'https', hostname: 'static.pandascore.io' },
       { protocol: 'https', hostname: '*.pandascore.co' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org' },
     ],
   },
 };
